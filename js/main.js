@@ -1,5 +1,12 @@
 const form = document.getElementById("novoItem")
 const lista = document.getElementById("lista")
+const itens = JSON.parse(localStorage.getItem("itens")) || []
+
+
+
+itens.forEach((elemento) => {
+    criaElementos(elemento)
+})
 
 
 form.addEventListener("submit", (evento) =>{
@@ -8,30 +15,36 @@ form.addEventListener("submit", (evento) =>{
     const nome = evento.target.elements['nome']
     const quantidade = evento.target.elements['quantidade']
 
-    criaElementos(nome.value, quantidade.value)
-   
+    const itemAtual = {
+        "nome": nome.value,
+        "quantidade": quantidade.value
+   }
+
+    criaElementos(itemAtual)
+
+   itens.push(itemAtual)
+
+   localStorage.setItem("itens", JSON.stringify(itens))
+
     nome.value = ""
     quantidade.value = ""
-
-    console.log(evento)
     
 } )
 
-function criaElementos(nome, quantidade){
+function criaElementos(item){
 
    // <li class="item"><strong>7</strong>Camisas</li>
    const novoItem = document.createElement('li')
    novoItem.classList.add("item")
 
    const numeroItem = document.createElement('strong')
-   numeroItem.innerHTML = quantidade
+   numeroItem.innerHTML = item.quantidade
 
    novoItem.appendChild(numeroItem)
-   novoItem.innerHTML += nome
+   novoItem.innerHTML += item.nome
 
    lista.appendChild(novoItem)
-
-   localStorage.setItem("nome", nome)
-   localStorage.setItem("quatidade", quantidade)
    
 }
+
+// localStorage só permite armazenar string, então usamos o metodo JSON.stringify para converter o objeto em string.
