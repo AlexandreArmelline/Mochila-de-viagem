@@ -15,14 +15,26 @@ form.addEventListener("submit", (evento) =>{
     const nome = evento.target.elements['nome']
     const quantidade = evento.target.elements['quantidade']
 
+    const existe = itens.find(elemento => elemento.nome === nome.value)
+       
     const itemAtual = {
         "nome": nome.value,
         "quantidade": quantidade.value
    }
 
-    criaElementos(itemAtual)
+   if (existe) {
+    itemAtual.id = existe.id
 
-   itens.push(itemAtual)
+        atualizaElemento(itemAtual)
+
+   } else {
+        itemAtual.id = itens.length
+
+        criaElementos(itemAtual)
+
+        itens.push(itemAtual)
+   }
+
 
    localStorage.setItem("itens", JSON.stringify(itens))
 
@@ -33,18 +45,22 @@ form.addEventListener("submit", (evento) =>{
 
 function criaElementos(item){
 
-   // <li class="item"><strong>7</strong>Camisas</li>
-   const novoItem = document.createElement('li')
+   const novoItem = document.createElement("li")
    novoItem.classList.add("item")
 
-   const numeroItem = document.createElement('strong')
+   const numeroItem = document.createElement("strong")
    numeroItem.innerHTML = item.quantidade
-
+   numeroItem.dataset.id = item.id
    novoItem.appendChild(numeroItem)
+
    novoItem.innerHTML += item.nome
 
    lista.appendChild(novoItem)
    
+}
+
+function atualizaElemento(item) {
+    document.querySelector("[data-id='"+item.id+"']").innerHtml = item.quantidade
 }
 
 // localStorage só permite armazenar string, então usamos o metodo JSON.stringify para converter o objeto em string.
