@@ -15,7 +15,7 @@ form.addEventListener("submit", (evento) =>{
     const nome = evento.target.elements['nome'];
     const quantidade = evento.target.elements['quantidade'];
 
-    const existe = itens.find(elemento => elemento.nome === nome.value);
+    const existe = itens.find((elemento) => elemento.nome === nome.value);
        
     const itemAtual = {
         "nome": nome.value,
@@ -57,6 +57,8 @@ function criaElementos(item){
 
    novoItem.innerHTML += item.nome;
 
+   novoItem.appendChild(botaoDeleta());
+
    lista.appendChild(novoItem);
    
 }
@@ -64,5 +66,22 @@ function criaElementos(item){
 function atualizaElemento(item) {
     document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
 };
+
+function botaoDeleta() {
+    const elementoBotao = document.createElement("button");
+    elementoBotao.innerText = "X"
+
+    //arrow function ñ carrega o 'this' portanto não podemos usa la aqui
+    elementoBotao.addEventListener("click", function(){
+        deletaElemento(this.parentNode)
+    })
+
+    return elementoBotao
+    
+}
+
+function deletaElemento(tag) {
+    tag.remove()
+}
 
 // localStorage só permite armazenar string, então usamos o metodo JSON.stringify para converter o objeto em string.
