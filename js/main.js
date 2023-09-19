@@ -27,10 +27,10 @@ form.addEventListener("submit", (evento) =>{
 
         atualizaElemento(itemAtual);
 
-        itens[existe.id] = itemAtual
+        itens[itens.findIndex(elemento => elemento.id === existe.id)] = itemAtual
 
    } else {
-        itemAtual.id = itens.length;
+        itemAtual.id = itens[itens.length -1] ? (itens[itens.length-1]).id + 1 : 0;
 
         criaElementos(itemAtual);
 
@@ -57,7 +57,7 @@ function criaElementos(item){
 
    novoItem.innerHTML += item.nome;
 
-   novoItem.appendChild(botaoDeleta());
+   novoItem.appendChild(botaoDeleta(item.id));
 
    lista.appendChild(novoItem);
    
@@ -67,21 +67,30 @@ function atualizaElemento(item) {
     document.querySelector("[data-id='"+item.id+"']").innerHTML = item.quantidade;
 };
 
-function botaoDeleta() {
+function botaoDeleta(id) {
     const elementoBotao = document.createElement("button");
     elementoBotao.innerText = "X"
 
     //arrow function ñ carrega o 'this' portanto não podemos usa la aqui
     elementoBotao.addEventListener("click", function(){
-        deletaElemento(this.parentNode)
+        deletaElemento(this.parentNode, id)
     })
 
     return elementoBotao
     
 }
 
-function deletaElemento(tag) {
-    tag.remove()
+function deletaElemento(tag, id) {
+
+    tag.remove();
+
+    console.log(id)
+
+    itens.splice(itens.findIndex(elemento => elemento.id === id) ,1);
+
+    localStorage.setItem("itens", JSON.stringify(itens));
+
+    console.log(itens)
 }
 
 // localStorage só permite armazenar string, então usamos o metodo JSON.stringify para converter o objeto em string.
